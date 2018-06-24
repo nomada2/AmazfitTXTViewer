@@ -1,8 +1,11 @@
 package xyz.domcorvasce.amazfittxtviewer;
 
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        addDoubleTapEvent(findViewById(R.id.view));
 
         final int ZOOM_100_ITEM_POSITION = 3;
 
@@ -103,6 +107,31 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+
+    private void addDoubleTapEvent(View view) {
+        final GestureDetector detector = new GestureDetector(
+                getApplicationContext(),
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent event) {
+                        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                        homeIntent.addCategory(Intent.CATEGORY_HOME);
+                        homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                        startActivity(homeIntent);
+                        return true;
+                    }
+                }
+        );
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return detector.onTouchEvent(event);
+            }
         });
     }
 
